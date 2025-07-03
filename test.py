@@ -1,16 +1,19 @@
-# test_create_contact.py
+# from app.agents.hubspot_agent import run_test_agent
 
-from app.tools.hubspot_tools import create_contact_tool
+# contact_info = {
+#     "email": "zanish.user@example.com",
+#     "first_name": "zanish",
+#     "last_name": "bilal"
+# }
 
-# 👇 Test data (change to avoid duplicates in HubSpot)
-test_input = {
-    "email": "ali.khan2@example.com",
-    "first_name": "Ali",
-    "last_name": "Khan2"
-}
+# response = run_test_agent(contact_info)
+# print("HubSpot Result:", response["output"])
 
-# 🔧 Call the tool
-result = create_contact_tool(test_input)
 
-# 🖨️ Print result
-print(result)
+
+from app.agents.hubspot_agent import run_test_agent
+
+chat_query = "my name is zanish bilal is zanishbilal72@gmail.com ."
+
+response = run_test_agent(chat_query)
+print("HubSpot Result:", response["output"])

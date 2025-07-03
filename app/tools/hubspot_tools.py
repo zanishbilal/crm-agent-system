@@ -1,8 +1,8 @@
+
+import json
 from langchain.tools import tool
 from hubspot import HubSpot
 from hubspot.crm.contacts import SimplePublicObjectInput
-from pydantic import BaseModel
-import json
 
 # Load config
 with open("app/config/config.json") as f:
@@ -11,31 +11,27 @@ with open("app/config/config.json") as f:
 # Initialize HubSpot client
 hubspot = HubSpot(access_token=config["hubspot_api_key"])
 
-# Input schema
-class CreateContactInput(BaseModel):
-    email: str
-    first_name: str
-    last_name: str
-
-# Tool
-@tool("create_hubspot_contact", args_schema=CreateContactInput)
-def create_contact_tool(email: str, first_name: str, last_name: str) -> str:
+@tool
+def create_real_contact(action_input: str) -> str:
     """
-    Creates a contact in HubSpot using email, first name, and last name.
+    Expects a JSON string as input with keys 'email', 'first_name', 'last_name'.
     """
     try:
-        properties = {
+        data = json.loads(action_input)
+        email = data['email']
+        first_name = data['first_name']
+        last_name = data['last_name']
+
+        contact_input = SimplePublicObjectInput(properties={
             "email": email,
             "firstname": first_name,
-            "lastname": last_name
-        }
-        contact_input = SimplePublicObjectInput(properties=properties)
+            "lastname": last_name,
+        })
 
-        # ✅ Correct usage with named argument
-        contact = hubspot.crm.contacts.basic_api.create(
+        result = hubspot.crm.contacts.basic_api.create(
             simple_public_object_input_for_create=contact_input
         )
 
-        return f"✅ Contact created successfully with ID: {contact.id}"
+        return f"✅ Contact created successfully with ID: {result.id}"
     except Exception as e:
-        return f"❌ Failed to create contact: {e}"
+        return f"❌ HubSpot API error: {str(e)}"
