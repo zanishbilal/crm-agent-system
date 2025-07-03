@@ -1,0 +1,6 @@
+flask
+langchain-community
+langchain
+langchain-core
+ollama
+hubspot-api-client
