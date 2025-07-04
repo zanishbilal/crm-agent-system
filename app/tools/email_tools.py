@@ -2,13 +2,16 @@ import json
 import smtplib
 from email.message import EmailMessage
 from langchain.tools import tool
+import os
 
+# with open("app/config/config.json", "r") as f:
+#     config = json.load(f)
 
-with open("app/config/config.json", "r") as f:
-    config = json.load(f)
+# # Extract Gmail App Password
+# gmail_app_password = config.get("gmail_app_password")
 
-# Extract Gmail App Password
-gmail_app_password = config.get("gmail_app_password")
+gmail_password = os.environ.get("GMAIL_APP_PASSWORD")
+
 
 @tool
 def send_email_smtp(action_input: str) -> str:
