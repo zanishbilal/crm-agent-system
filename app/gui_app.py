@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 from app.agents.orchestrator_agent import run_orchestrator
 
-app = Flask(__name__, template_folder="app\templates\index.html")
+app = Flask(__name__, template_folder="app/templates")
 
 
 @app.route("/", methods=["GET", "POST"])
