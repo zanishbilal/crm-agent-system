@@ -1,8 +1,8 @@
 from langgraph.graph import StateGraph, END
 from typing import TypedDict
 
-from app.agents.hubspot_agent import run_test_agent
-from app.tools.email_tools import send_email_smtp
+from agents.hubspot_agent import run_test_agent
+from tools.email_tools import send_email_smtp
 import json
 
 # Shared state

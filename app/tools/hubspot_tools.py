@@ -5,16 +5,16 @@ from hubspot import HubSpot
 from hubspot.crm.contacts import SimplePublicObjectInput
 import os
 # Load config
-# with open("app/config/config.json") as f:
-#     config = json.load(f)
-
-# # Initialize HubSpot client
-# hubspot = HubSpot(access_token=config["hubspot_api_key"])
-
-hubspot_api_key = os.environ.get("HUBSPOT_API_KEY")
+with open("app/config/config.json") as f:
+    config = json.load(f)
 
 # Initialize HubSpot client
-hubspot = HubSpot(access_token=hubspot_api_key)
+hubspot = HubSpot(access_token=config["hubspot_api_key"])
+
+# hubspot_api_key = os.environ.get("HUBSPOT_API_KEY")
+
+# Initialize HubSpot client
+# hubspot = HubSpot(access_token=hubspot_api_key)
 
 @tool
 def create_real_contact(action_input: str) -> str:

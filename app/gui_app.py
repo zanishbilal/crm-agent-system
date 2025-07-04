@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-from app.agents.orchestrator_agent import run_orchestrator
+from agents.orchestrator_agent import run_orchestrator
 import os  # Add this
 
 app = Flask(__name__, template_folder="templates")
