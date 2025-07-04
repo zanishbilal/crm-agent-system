@@ -128,7 +128,7 @@ import re
 from langchain.agents import AgentExecutor, create_react_agent
 from langchain_community.llms import Ollama
 from langchain_core.prompts import PromptTemplate
-from app.tools.hubspot_tools import create_real_contact
+from tools.hubspot_tools import create_real_contact
 
 def run_test_agent(query: str):
     llm = Ollama(model="qwen2.5:14b")

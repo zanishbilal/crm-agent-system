@@ -36,7 +36,7 @@ def send_email_smtp(action_input: str) -> str:
 
         # ✅ Update with your email and generated App Password
         sender_email = "zanishbilal72@gmail.com"
-        app_password = gmail_app_password
+        app_password = gmail_password
         # Create the email
         msg = EmailMessage()
         msg["Subject"] = subject
