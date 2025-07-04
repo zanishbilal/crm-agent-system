@@ -1,6 +1,4 @@
-Zaroor bhai! Neeche complete `README.md` file hai jo tum GitHub repo ke root mein rakh sakte ho. Ye clearly explain karta hai project ka purpose, usage, tech stack, and setup instructions.
 
----
 
 ### ✅ `README.md` for CRM Agent System
 
@@ -147,13 +145,5 @@ Pull requests welcome. For major changes, please open an issue first to discuss 
 
 This project is licensed under the MIT License. See `LICENSE` file for details.
 
-```
 
----
-
-Let me know bhai:
-- Agar GUI ka screenshot ya GIF chahiye toh upload placeholder bhi bana dun.
-- `demo.mp4` ya `streamlit` version chahiye toh woh bhi ho sakta hai.
-- `README` ko Urdu mein bhi dena chaho toh woh bhi kara dun ❤️
-```
 # crm-agent-system
