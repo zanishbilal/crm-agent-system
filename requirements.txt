@@ -6,3 +6,4 @@ ollama
 param
 langgraph
 gunicorn
+hubspot-api-client
