@@ -40,3 +40,44 @@ def create_real_contact(action_input: str) -> str:
         return f"✅ Contact created successfully with ID: {result.id}"
     except Exception as e:
         return f"❌ HubSpot API error: {str(e)}"
+
+@tool
+def update_contact(action_input: str) -> str:
+    """
+    Update an existing contact in HubSpot.
+    Input JSON: { "email": "...", "first_name": "...", "last_name": "..." }
+    """
+    import json
+    from hubspot import HubSpot
+    from hubspot.crm.contacts import SimplePublicObjectInput
+
+    try:
+        data = json.loads(action_input)
+        email = data["email"]
+
+        # Search contact by email
+        results = hubspot.crm.contacts.search_api.do_search({
+            "filterGroups": [{
+                "filters": [{
+                    "propertyName": "email",
+                    "operator": "EQ",
+                    "value": email
+                }]
+            }],
+            "limit": 1
+        })
+
+        if not results.results:
+            return f"❌ Contact with email {email} not found."
+
+        contact_id = results.results[0].id
+        update_input = SimplePublicObjectInput(properties={
+            "firstname": data.get("first_name", ""),
+            "lastname": data.get("last_name", "")
+        })
+
+        hubspot.crm.contacts.basic_api.update(contact_id, update_input)
+        return f"✅ Contact updated: {contact_id}"
+
+    except Exception as e:
+        return f"❌ Error updating contact: {e}"
