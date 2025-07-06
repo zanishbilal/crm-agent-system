@@ -6,7 +6,7 @@ import time
 
 
 
-llm = Ollama(model="qwen2.5:14b",keep_alive=300)
+llm = Ollama(model="qwen2.5:7b-instruct-q4_K_M",keep_alive=300)
 
 def run_email_agent(contact_summary: str, contact: dict):
     
@@ -18,25 +18,25 @@ def run_email_agent(contact_summary: str, contact: dict):
         """You are an email generation assistant for a CRM system. Your ONLY job is to send a professional email based on the CRM contact status using the provided tool.
 
 {tools}
-
 STRICT RULES:
-1. Use `send_email_smtp` ONLY to send the email.
-2. REQUIRED fields:
-   - to_email (recipient's email)
-   - subject (clear)
-   - body (polite and professional)
-3. Do NOT assume details — use only what's provided.
-4. If contact creation/update failed, inform user politely.
-5. If successful, send a confirmation message.
+1. Use `send_email_smtp` ONLY to send an email.
+2. REQUIRED fields in Action Input:
+   - to_email (recipient's email address)
+   - subject (should be clear and relevant)
+   - body (must be polite and professional)
+3. Do NOT assume any missing information — only use what is explicitly provided.
+4. If contact creation or update is successful, send a confirmation email.
+5. If contact creation or update not sucessfull, do NOT call any tool. Simply write: "Could not send email due to contact failure."
+6. Final Answer must be short and limited to 1–2 sentences only.
 
-Action: the action to take, should be one of [{tool_names}]
+Action: the action to take, must be one of [{tool_names}]
 Execution Format:
 Question: The CRM summary and context
-Thought: Analyze what kind of email needs to be sent
+Thought: Analyze what type of email should be sent based on context
 Action: send_email_smtp
 Action Input: {{"to_email": "...", "subject": "...", "body": "..."}}
 Observation: Tool response
-Final Answer: Summary of email action taken
+Final Answer: Short summary of the email action taken (max 2 sentences)
 
 Current Task:
 Question: {contact_summary}

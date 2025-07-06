@@ -4,7 +4,7 @@ import os  # Add this
 import asyncio
 
 app = Flask(__name__, template_folder="templates")
-
+app.config["TEMPLATES_AUTO_RELOAD"] = True
 @app.route("/", methods=["GET", "POST"])
 def index():
     hubspot_response = ""
@@ -21,4 +21,4 @@ def index():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  
-    app.run(host="0.0.0.0", port=port) 
+    app.run(host="0.0.0.0", port=port, debug=True)

@@ -7,67 +7,73 @@ from langchain_core.prompts import PromptTemplate
 from tools.hubspot_tools import create_real_contact,update_contact
 
 
-llm = Ollama(model="qwen2.5:14b",keep_alive=300)
+llm = Ollama(model="qwen2.5:7b-instruct-q4_K_M",keep_alive=300)
 
 
 def run_test_agent(query: str):
     start = time.time()
     tools = [create_real_contact,update_contact]
 
+    from langchain.prompts import PromptTemplate
+
+    prompt = PromptTemplate(
+    input_variables=["input", "tools", "tool_names", "agent_scratchpad"],
+    template="""
+You are a HubSpot CRM specialist.Every time you receive a request, you must re-analyze it from scratch. Your ONLY task is creating OR updating contacts using the provided tools.
+
+{tools}
+
+Use the following format:
+
+STRICT RULES:
+1. Use `create_real_contact` for NEW contact creation.
+2. Use `update_contact` for UPDATING an existing contact.
+3. REQUIRED parameters for both tools:
+   - email (valid email format)
+   - first_name (string)
+   - last_name (string)
+4. NEVER invent or assume contact details.
+5. If required fields are missing, say so in Final Answer. Do NOT guess.
+6. ALWAYS include "new_email" or new last name or first name if change or update is requested
+7. dont change the inout data of user by your self
+Action: the action to take, should be one of [{tool_names}]
+Execution Format:
+Question: The contact creation or update request
+Thought: Analyze if this is a create or update action, and if all required details are present
+Action: create_real_contact or update_contact
+Action Input: {{"email": "...", "first_name": "...", "last_name": "..."}}
+Observation: Tool response
+Thought: Confirm completion
+Final Answer: Summary of 2 the action taken,and alwyas add fail or sucess in final response.
+
+Current Task:
+Question: {input}
+{agent_scratchpad}
+"""
+)
+
 
 #     prompt = PromptTemplate.from_template(
-#     """You are a HubSpot CRM specialist. Your ONLY task is creating OR updating contacts using the provided tools.
-
+#     """You are a HubSpot agent. ONLY use the tools below for contact tasks.
 # {tools}
+# TOOLS:
 
-# Use the following format:
+# RULES:
+# 1. Required fields: email, first_name, last_name
+# 2. Don’t guess or create data not provided
+# 3. If details are missing or unclear, just say it
+# 4. If user doesn’t clearly ask to create/update, do nothing
 
-# STRICT RULES:
-# 1. Use `create_real_contact` for NEW contact creation.
-# 2. Use `update_contact` for UPDATING an existing contact.
-# 3. REQUIRED parameters for both tools:
-#    - email (valid email format)
-#    - first_name (string)
-#    - last_name (string)
-# 4. NEVER invent or assume contact details.
-# 5. If required fields are missing, say so in Final Answer. Do NOT guess.
-# 6. if user not specify creat the contact dont creaet it by yourself just retern that contact not found if update contact not exist
-# Action: the action to take, should be one of [{tool_names}]
-# Execution Format:
-# Question: The contact creation or update request
-# Thought: Analyze if this is a create or update action, and if all required details are present
-# Action: create_real_contact or update_contact
-# Action Input: {{"email": "...", "first_name": "...", "last_name": "..."}}
-# Observation: Tool response
-# Thought: Confirm completion
-# Final Answer: Summary of the action taken
-
-# Current Task:
+# FORMAT:
 # Question: {input}
+# Thought: Decide what to do
+# Action: create_real_contact or update_contact[{tool_names}]
+# Action Input: {{...}}
+# Observation: Tool output
+# Final Answer: Your final summary
+
 # {agent_scratchpad}"""
 # )
-
-    prompt = PromptTemplate.from_template(
-    """You are a HubSpot agent. ONLY use the tools below for contact tasks.
-{tools}
-TOOLS:
-
-RULES:
-1. Required fields: email, first_name, last_name
-2. Don’t guess or create data not provided
-3. If details are missing or unclear, just say it
-4. If user doesn’t clearly ask to create/update, do nothing
-
-FORMAT:
-Question: {input}
-Thought: Decide what to do
-Action: create_real_contact or update_contact[{tool_names}]
-Action Input: {{...}}
-Observation: Tool output
-Final Answer: Your final summary
-
-{agent_scratchpad}"""
-)
 
 
     agent = create_react_agent(
